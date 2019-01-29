@@ -14,7 +14,7 @@
  *===----------------------------------------------------------------------===*/
 
 /* Capstone Disassembly Engine */
-/* By Nguyen Anh Quynh <aquynh@gmail.com>, 2013-2014 */
+/* By Nguyen Anh Quynh <aquynh@gmail.com>, 2013-2015 */
 
 #ifndef CS_X86_DISASSEMBLERDECODER_H
 #define CS_X86_DISASSEMBLERDECODER_H
@@ -23,9 +23,6 @@
 #include <libkern/libkern.h>
 #else
 #include <stdio.h>
-#endif
-#if !defined(_MSC_VER) || !defined(_KERNEL_MODE)
-#include <stdint.h>
 #endif
 
 #include "X86DisassemblerDecoderCommon.h"
@@ -355,7 +352,15 @@
   ENTRY(DR4)        \
   ENTRY(DR5)        \
   ENTRY(DR6)        \
-  ENTRY(DR7)
+  ENTRY(DR7)        \
+  ENTRY(DR8)        \
+  ENTRY(DR9)        \
+  ENTRY(DR10)        \
+  ENTRY(DR11)        \
+  ENTRY(DR12)        \
+  ENTRY(DR13)        \
+  ENTRY(DR14)        \
+  ENTRY(DR15)
 
 #define REGS_CONTROL  \
   ENTRY(CR0)          \
@@ -609,6 +614,7 @@ typedef struct InternalInstruction {
      needed to find relocation entries for adding symbolic operands */
   uint8_t displacementOffset;
   uint8_t immediateOffset;
+  uint8_t modRMOffset;
 
   // end-of-zero-members
 
@@ -679,9 +685,6 @@ typedef struct InternalInstruction {
   /* The ModR/M byte, which contains most register operands and some portion of
      all memory operands */
   uint8_t                       modRM;
-
-  /* contains the location (for use with the reader) of the modRM byte */
-  uint64_t                      modRMLocation;
 
   // special data to handle MOVcr, MOVdr, MOVrc, MOVrd
   uint8_t                       firstByte;     // save the first byte in stream
